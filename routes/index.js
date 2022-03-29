@@ -1,13 +1,11 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get("/", function (req, res, next) {
+  res.status(200).json({
+    success:true,
+    message:"Welcome",
+  })
 });
-
-const {googlelogin} = require('../controllers/auth')
-
-router.post('/api/googlelogin', googlelogin)
 
 module.exports = router;
