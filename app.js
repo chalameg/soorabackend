@@ -1,12 +1,16 @@
 var createError = require('http-errors');
 var express = require('express');
 var cors = require('cors');
+const bodyParser = require("body-parser");
 var cookieSession = require('cookie-session')
+const mongoose = require("mongoose");
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 const passport = require('passport')
-require('./passport')
+require('./strategy/passport')
+
 var app = express();
 
 app.use(cookieSession({
@@ -14,6 +18,27 @@ app.use(cookieSession({
   keys: ['chala'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
+
+// Bodyparser middleware
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
+app.use(bodyParser.json());
+
+// DB Config
+const db = require("./config/keys").mongoURI;
+
+// Connect to MongoDB
+mongoose
+  .connect(
+    db,
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
+
 
 app.use(passport.initialize())
 app.use(passport.session())
